@@ -1,145 +1,181 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>轮播图</title>
+    <title>jQuery模仿京东轮播图</title>
     <script src="js/jquery.js"></script>
     <style>
-        *{
+        * {
             padding: 0px;
             margin: 0px;
-            margin: 0 auto;
         }
-        ul{
-            list-style: none;
-        }
-        .main{
-            width: 590px;
-            height: 470px;
+
+        #banner {
             position: relative;
-            border: 2px solid rgb(0,0,255);
+            width: 590px;
+            height: 470PX;
+            margin: 0 auto;
+            border: 2px solid rgb(0, 0, 255);
         }
-        img{
+
+        .img {
+            display: none;
+            width: 590px;
+            height: 470PX;
+            position: absolute;
+        }
+
+        img {
             width: 590px;
             height: 470px;
         }
-        .img li{
+
+        .btn-list {
             position: absolute;
-            left: 0px;
-            top:0px;
+            width: 152px;
+            height: px;
+            left: 40px;
+            bottom: 20px;
         }
-        .point{
-            position: absolute;
-            bottom: 15px;
-            left: 15px;
-        }
-        .point li{
-            width: 9px;
-            height: 9px;
-            margin:0 4px;
+
+        .btn {
+            width: 10px;
+            height: 10px;
+            float: left;
+            border: 1px solid rgba(255, 255, 255, .05);
             border-radius: 50%;
-            display: inline-block;
-            background-color: rgba(255,255,255,.4);
+            margin-right: 6px;
+            background-color: rgba(255, 255, 255, .4);
         }
-        .btn{
-            width:30px;
+
+        .active {
+            background-color: rgba(255, 255, 255);
+            box-shadow: 0px 0px 2px 5px rgba(255, 255, 255, .4);
+        }
+
+        .point {
+            position: absolute;
+            width: 30px;
             height: 30px;
-            position: absolute;
-            border-radius: 50%;
-            top:50%;
-            text-align: center;
+            font-size: 20px;
             line-height: 30px;
-            color: rgba(255,255,255,.4);
-            font-size: 15px;
-            font-weight: bold;
-            margin-top: -15px;
-            background-color: rgba(0,0,0,.4);
             cursor: pointer;
+            top: 48%;
+            text-align: center;
+            color: white;
+            background-color: rgba(0, 0, 0, .5);
+            opacity: 0.4;
+            border-radius: 50%;
         }
-        .left{
-            left:0px;
+
+        .point:hover {
+            opacity: .5;
+            color: white;
+            background: black;
         }
-        .right{
+
+        .left {
+            left: 0px;
+        }
+
+        .right {
             right: 0px;
-        }
-        .point .active{
-            background-color:rgba(255,255,255,0.9);
-            border: 3px solid rgba(0,0,0,.3);
-        }
-        .btn:hover{
-            color: rgba(255,255,255,.6);
-            background-color: rgba(0,0,0,.6);
-            cursor: pointer;
         }
     </style>
 </head>
+
 <body>
-    <div class="main">
-        <ul class="img">
-            <li><img src="1.jpg"></li>
-            <li><img src="2.jpg"></li>
-            <li><img src="3.jpg"></li>
-            <li><img src="4.jpg"></li>
-            <li><img src="5.jpg"></li>
-            <li><img src="6.jpg"></li>
-            <li><img src="7.jpg"></li>
-            <li><img src="8.jpg"></li>
-            <li><img src="1.jpg"></li>
-        </ul>
-        <ul class="point">
-        </ul>
-        <div class="btn left"> < </div>
-        <div class="btn right"> > </div>
+    <!--外层div-->
+    <div id="banner">
+        <!-- 图片列表 -->
+        <div class="warp">
+            <a href="#" class="img" style="display: block;"><img src="1.jpg" alt="" /></a>
+            <a href="#" class="img"><img src="2.jpg" alt="" /></a>
+            <a href="#" class="img"><img src="3.jpg" alt="" /></a>
+            <a href="#" class="img"><img src="4.jpg" alt="" /></a>
+            <a href="#" class="img"><img src="5.jpg" alt="" /></a>
+            <a href="#" class="img"><img src="6.jpg" alt="" /></a>
+            <a href="#" class="img"><img src="7.jpg" alt="" /></a>
+            <a href="#" class="img"><img src="8.jpg" alt="" /></a>
+        </div>
+        <!--点击按钮列表-->
+        <div class="btn-list">
+            <div class="btn active"></div>
+            <div class="btn"></div>
+            <div class="btn"></div>
+            <div class="btn"></div>
+            <div class="btn"></div>
+            <div class="btn"></div>
+            <div class="btn"></div>
+            <div class="btn"></div>
+        </div>
+        <!--左箭头-->
+        <div class="point left">&lt;</div>
+        <!--右箭头-->
+        <div class="point right">&gt;</div>
     </div>
 </body>
 <script>
-    var num=$(".img li").length;
-    for(var i=1;i<=num-1;i++){
-        var li="<li></li>";
-        $(".point").append(li);
-    }
-    $(".point li").first().addClass('active');
-    //鼠标划上指示点
-    $(".point li").mouseover(function(){
-        $(this).addClass('active').siblings().removeClass();
-        var index=$(this).index();
-        i=index;
-        $(".img li").eq(index).show().siblings().hide();
+    var index = 0;
+    var stop = false;
+    var $li = $(".warp").children(".img"); //获取所有的轮播图片
+    var $page = $(".btn-list").children(".btn"); //获取所有的圆点列表
+    $page.hover(function () {
+        index = $(this).index();
+        $(this).addClass("active").stop(true, true).siblings().removeClass("active"); //给鼠标选中的圆点列表添加样式
+        $li.eq(index).stop(true, true).fadeIn(500).siblings().fadeOut(500); //轮播图片淡入淡出效果
     });
-    var i=0;
-    //向右
-    function moveRight(){
-        if(i==num-1){
-            i=0;
+    //向左显示前一张图片
+    $(".left").click(function () {
+        clearInterval(timer);
+        index--;
+        if (index < 0) {
+            index = $li.length - 1;
         }
-        $(".point li").eq(i).addClass('active').siblings().removeClass();
-        $(".img li").eq(i).show().siblings().hide();
-        i++;
-    }
-    //向左
-    function moveLeft(){
-        i--
-        if(i==-1){
-            i=num-2;
+        $li.eq(index).stop(true, true).fadeIn().siblings().fadeOut();
+        $page.eq(index).addClass("active").stop(true, true).siblings().removeClass("active");
+    });
+    //向右显示后一张图片
+    $(".right").click(function () {
+        clearInterval(timer);
+        index++;
+        if (index > $li.length - 1) {
+            index = 0;
         }
-        $(".point li").eq(i).addClass('active').siblings().removeClass();
-        $(".img li").eq(i).show().siblings().hide();
-    }
-    //定时器
-    var t=setInterval(moveRight,1500);
-    //鼠标划上停止轮播
-    $(".main").hover(function(){
-        clearInterval(t);
-    },function(){
-        t=setInterval(moveRight,1500);
+        $li.eq(index).stop(true, true).fadeIn().siblings().fadeOut();
+        $page.eq(index).addClass("active").stop(true, true).siblings().removeClass("active");
     });
-    //左右箭头
-    $(".right").click(function(){
-        moveRight();
+    //定时器轮播图片
+    var timer = setInterval(function () {
+        if (stop){
+                return;
+        }
+        index++;
+        if (index > $li.length - 1) {
+            index = 0;
+        }
+        $li.eq(index).stop(true, true).fadeIn().siblings().fadeOut();
+        $page.eq(index).addClass("active").stop(true, true).siblings().removeClass("active");
+    }, 2000);
+    //鼠标移入图片内，自动轮播停止
+    $("#banner").mousemove(function () {
+        clearInterval(timer);
+    }).mouseout(function () {
+        timer = setInterval(function () {
+            if (stop){
+                return;
+            }
+            index++;
+            if (index > $li.length - 1) {
+                index = 0;
+            }
+            $li.eq(index).stop(true, true).fadeIn().siblings().fadeOut();
+            $page.eq(index).addClass("active").stop(true, true).siblings().removeClass("active");
+        }, 2000);
     });
-    $(".left").click(function(){
-        moveLeft();
-    })
+
 </script>
+
 </html>
