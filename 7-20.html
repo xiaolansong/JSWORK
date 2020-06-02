@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>轮播图</title>
+    <script src="js/jquery.js"></script>
+    <style>
+        *{
+            padding: 0px;
+            margin: 0px;
+            margin: 0 auto;
+        }
+        ul{
+            list-style: none;
+        }
+        .main{
+            width: 590px;
+            height: 470px;
+            position: relative;
+            border: 2px solid rgb(0,0,255);
+        }
+        img{
+            width: 590px;
+            height: 470px;
+        }
+        .img li{
+            position: absolute;
+            left: 0px;
+            top:0px;
+        }
+        .point{
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+        }
+        .point li{
+            width: 9px;
+            height: 9px;
+            margin:0 4px;
+            border-radius: 50%;
+            display: inline-block;
+            background-color: rgba(255,255,255,.4);
+        }
+        .btn{
+            width:30px;
+            height: 30px;
+            position: absolute;
+            border-radius: 50%;
+            top:50%;
+            text-align: center;
+            line-height: 30px;
+            color: rgba(255,255,255,.4);
+            font-size: 15px;
+            font-weight: bold;
+            margin-top: -15px;
+            background-color: rgba(0,0,0,.4);
+            cursor: pointer;
+        }
+        .left{
+            left:0px;
+        }
+        .right{
+            right: 0px;
+        }
+        .point .active{
+            background-color:rgba(255,255,255,0.9);
+            border: 3px solid rgba(0,0,0,.3);
+        }
+        .btn:hover{
+            color: rgba(255,255,255,.6);
+            background-color: rgba(0,0,0,.6);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <ul class="img">
+            <li><img src="1.jpg"></li>
+            <li><img src="2.jpg"></li>
+            <li><img src="3.jpg"></li>
+            <li><img src="4.jpg"></li>
+            <li><img src="5.jpg"></li>
+            <li><img src="6.jpg"></li>
+            <li><img src="7.jpg"></li>
+            <li><img src="8.jpg"></li>
+            <li><img src="1.jpg"></li>
+        </ul>
+        <ul class="point">
+        </ul>
+        <div class="btn left"> < </div>
+        <div class="btn right"> > </div>
+    </div>
+</body>
+<script>
+    var num=$(".img li").length;
+    for(var i=1;i<=num-1;i++){
+        var li="<li></li>";
+        $(".point").append(li);
+    }
+    $(".point li").first().addClass('active');
+    //鼠标划上指示点
+    $(".point li").mouseover(function(){
+        $(this).addClass('active').siblings().removeClass();
+        var index=$(this).index();
+        i=index;
+        $(".img li").eq(index).show().siblings().hide();
+    });
+    var i=0;
+    //向右
+    function moveRight(){
+        if(i==num-1){
+            i=0;
+        }
+        $(".point li").eq(i).addClass('active').siblings().removeClass();
+        $(".img li").eq(i).show().siblings().hide();
+        i++;
+    }
+    //向左
+    function moveLeft(){
+        i--
+        if(i==-1){
+            i=num-2;
+        }
+        $(".point li").eq(i).addClass('active').siblings().removeClass();
+        $(".img li").eq(i).show().siblings().hide();
+    }
+    //定时器
+    var t=setInterval(moveRight,1500);
+    //鼠标划上停止轮播
+    $(".main").hover(function(){
+        clearInterval(t);
+    },function(){
+        t=setInterval(moveRight,1500);
+    });
+    //左右箭头
+    $(".right").click(function(){
+        moveRight();
+    });
+    $(".left").click(function(){
+        moveLeft();
+    })
+</script>
+</html>
